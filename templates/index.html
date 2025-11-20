@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>PrediCar - Car Price Predictor</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <nav class="navbar">
+            <div class="navLogo">
+                <img src="../static/assets/predicar.png" alt="">
+            </div>
+
+            <div class="navLinks">
+                <a href="#">Home</a>
+                <a href="#predArea">Predict</a>
+            </div>
+        </nav>
+    </div>
+
+    <section class="head">
+        <img src="../static/assets/hero.jpg">
+        <h1 class="head-text">Know the price of Your Old Car</h1>
+    </section>
+
+    <div class="container">
+        <div class="hero" id="predArea">
+            <div class="banner">
+                <img src="../static/assets/banner.jpg" alt="bannerImg">
+                <div class="predit-price">
+                    <h2 id="prediction"></h2>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <form id="predictForm">
+
+                    <div class="form-ins">
+                        <label><b>Year of Purchase:</b></label><br>
+                        <input type="number" id="year" required>
+                    </div>
+
+                    <div class="form-ins">
+                        <label><b>Kilometres Driven:</b></label><br>
+                        <input type="number" id="km_driven" required>
+                    </div>
+
+                    <div class="form-ins">
+                        <label><b>Fuel Type:</b></label><br>
+                        <select id="fuel" required>
+                            <option>Petrol</option>
+                            <option>Diesel</option>
+                            <option>CNG</option>
+                            <option>LPG</option>
+                            <option>Electric</option>
+                        </select>
+                    </div>
+
+                    <div class="form-ins">
+                        <label><b>Seller Type:</b></label><br>
+                        <select id="seller_type" required>
+                            <option>Individual</option>
+                            <option>Dealer</option>
+                            <option>Trustmark Dealer</option>
+                        </select>
+                    </div>
+
+                    <div class="form-ins">
+                        <label><b>Transmission:</b></label><br>
+                        <select id="transmission" required>
+                            <option>Manual</option>
+                            <option>Automatic</option>
+                        </select>
+                    </div>
+
+                    <div class="form-ins">
+                        <label><b>Owner:</b></label><br>
+                        <select id="owner" required>
+                            <option>First Owner</option>
+                            <option>Second Owner</option>
+                            <option>Third Owner</option>
+                            <option>Fourth & Above Owner</option>
+                            <option>Test Drive Car</option>
+                        </select>
+                    </div>
+
+                    <div class="predict-btn">
+                        <button type="submit" class="btn">Predict Price</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        © Copyright 2025 - PrediCar
+    </div>
+
+    <script>
+    document.getElementById("predictForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        document.getElementById("prediction").innerHTML = "⏳ Predicting price...";
+
+        const data = {
+            year: parseInt(document.getElementById("year").value),
+            km_driven: parseInt(document.getElementById("km_driven").value),
+            fuel: document.getElementById("fuel").value,
+            seller_type: document.getElementById("seller_type").value,
+            transmission: document.getElementById("transmission").value,
+            owner: document.getElementById("owner").value
+        };
+
+        const response = await fetch("http://127.0.0.1:5000/predict", {   // FIXED
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        document.getElementById("prediction").innerHTML =
+            "Your Car Worth: ₹ " + result.predicted_price;
+    });
+</script>
+
+
+</body>
+</html>
